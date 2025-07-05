@@ -76,7 +76,7 @@ describe('fetchTransport', () => {
     // Advance time so abort fires
     vi.advanceTimersByTime(2000);
 
-    await expect(promise).rejects.toThrow(/Aborted|Timeout/i);
+    await expect(promise).rejects.toThrow(/Aborted|Timed out/i);
 
     vi.useRealTimers();
   }, 10000);

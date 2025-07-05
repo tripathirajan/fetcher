@@ -65,8 +65,8 @@ type ResponseInterceptor = (response: Response) => Promise<Response> | Response;
 export default class Fetcher {
   baseURL: string;
   defaultHeaders: Record<string, string>;
-  timeout: number;
-  retries: number;
+  timeout: number = 6000; // Default timeout of 60 seconds
+  retries: number = 0;
   credentials?: RequestCredentials;
 
   private requestInterceptor?: RequestInterceptor;

@@ -6,29 +6,21 @@
  * @param retries The number of retry attempts.
  * @returns A promise that resolves with the function result or rejects after all retries fail.
  */
-export function withRetries<T>(
+export async function withRetries<T>(
   fn: () => Promise<T>,
   retries: number,
 ): Promise<T> {
-  return new Promise((resolve, reject) => {
-    let attempt = 0;
-    while (attempt <= retries) {
-      try {
-        fn()
-          .then((res) => {
-            if (attempt === retries) return resolve(res);
-            return resolve(res);
-          })
-          .catch((err) => {
-            if (attempt === retries) return reject(err);
-            attempt++;
-          });
-      } catch (err) {
-        if (attempt === retries) return reject(err);
-        attempt++;
+  let attempt = 0;
+  while (true) {
+    try {
+      return await fn();
+    } catch (err) {
+      if (attempt >= retries) {
+        throw err;
       }
+      attempt++;
     }
-  });
+  }
 }
 
 /**

@@ -4,13 +4,22 @@
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
-    "test": "vitest",
-    "test:file": "vitest --run",
-    "test:watch": "vitest --watch",
-    "test:coverage": "vitest run --coverage",
-    "test:coverage:html": "vitest run --coverage --reporter html",
-    "test:coverage:json": "vitest run --coverage --reporter json",
+    "test": "node --max-old-space-size=8192 ./node_modules/.bin/vitest --run __test__/*.spec.ts",
+    "test:watch": "npm test -- --watch",
+    "test:coverage": "node --max-old-space-size=6144 ./node_modules/.bin/vitest run --coverage",
+    "test:coverage:html": "node --max-old-space-size=6144 ./node_modules/.bin/vitest run --coverage --reporter html",
+    "test:coverage:json": "node --max-old-space-size=6144 ./node_modules/.bin/vitest run --coverage --reporter json",
     "lint": "eslint \"src/**/*.ts\" \"__test__/**/*.ts\"",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write \"src/**/*.ts\" \"__test__/**/*.ts\"",
