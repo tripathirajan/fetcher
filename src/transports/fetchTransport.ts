@@ -1,4 +1,4 @@
-import { withRetries } from "../utils";
+import { withRetries } from '../utils';
 
 /**
  * Options for the fetchTransport function.
@@ -24,7 +24,7 @@ export interface FetchTransportOptions {
  * @returns A promise resolving to a Response object.
  */
 export async function fetchTransport(
-  options: FetchTransportOptions
+  options: FetchTransportOptions,
 ): Promise<Response> {
   const { url, config, timeout, retries, onDownloadProgress } = options;
 
@@ -48,7 +48,7 @@ export async function fetchTransport(
       if (onDownloadProgress && response.body) {
         const reader = response.body.getReader();
         const contentLength =
-          Number(response.headers.get("Content-Length")) || null;
+          Number(response.headers.get('Content-Length')) || null;
         let received = 0;
         const chunks: Uint8Array[] = [];
 

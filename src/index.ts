@@ -2,36 +2,23 @@
  * @module fetcher
  *
  * A modern HTTP client supporting fetch and XHR fallback.
- *
- * ## Example
- *
- * ```typescript
+ * Provides a simple API for making requests with support for interceptors, retries, and more.
+ * @example
  * import fetcher from 'fetcher';
- *
- * const api = fetcher.create({
- *   baseURL: 'https://api.example.com',
- *   timeout: 5000,
- *   retries: 3,
- * });
- *
- * // Perform a GET request
- * api.get('/users')
+ * const client = fetcher.create({ baseURL: 'https://api.example.com' });
+ * client.get('/endpoint')
+ *   .then(response => response.json())
  *   .then(data => console.log(data))
  *   .catch(err => console.error(err));
- *
- * // Download with progress
- * api.downloadWithProgress('/file.zip', (loaded, total) => {
- *   console.log(`Downloaded ${loaded}/${total}`);
- * });
- * ```
- *
- * ## Features
- * - Automatic retries and timeouts
- * - Request/response interceptors
- * - Download and upload progress
- * - Node and browser support
  */
-import Fetcher, { FetcherConfig } from "./Fetcher";
+// @see https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
+
+import Fetcher, {
+  FetcherConfig,
+  RequestConfig,
+  RequestInterceptor,
+  ResponseInterceptor,
+} from './Fetcher';
 
 function create(config: FetcherConfig) {
   return new Fetcher(config);
@@ -42,4 +29,9 @@ export default {
 };
 
 export { Fetcher };
-export type { FetcherConfig };
+export type {
+  FetcherConfig,
+  RequestConfig,
+  RequestInterceptor,
+  ResponseInterceptor,
+};

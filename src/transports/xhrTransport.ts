@@ -42,7 +42,7 @@ export function xhrTransport(options: XhrTransportOptions): Promise<Response> {
     const xhr = new XMLHttpRequest();
     xhr.open(method, url, true);
 
-    if (options.credentials === "include") {
+    if (options.credentials === 'include') {
       xhr.withCredentials = true;
     }
 
@@ -54,7 +54,7 @@ export function xhrTransport(options: XhrTransportOptions): Promise<Response> {
       Object.entries(headers).forEach(([k, v]) => xhr.setRequestHeader(k, v));
     }
 
-    xhr.responseType = "blob";
+    xhr.responseType = 'blob';
 
     if (onDownloadProgress) {
       xhr.onprogress = onDownloadProgress;
@@ -71,10 +71,10 @@ export function xhrTransport(options: XhrTransportOptions): Promise<Response> {
         .trim()
         .split(/[\r\n]+/)
         .forEach((line) => {
-          const parts = line.split(": ");
+          const parts = line.split(': ');
           const key = parts.shift();
           if (key) {
-            headers.append(key, parts.join(": "));
+            headers.append(key, parts.join(': '));
           }
         });
 
@@ -83,12 +83,12 @@ export function xhrTransport(options: XhrTransportOptions): Promise<Response> {
           status: xhr.status,
           statusText: xhr.statusText,
           headers,
-        })
+        }),
       );
     };
 
-    xhr.onerror = () => reject(new Error("XHR Network Error"));
-    xhr.ontimeout = () => reject(new Error("XHR Timeout"));
+    xhr.onerror = () => reject(new Error('XHR Network Error'));
+    xhr.ontimeout = () => reject(new Error('XHR Timeout'));
 
     xhr.send(body ?? null);
   });

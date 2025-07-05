@@ -8,14 +8,21 @@
  */
 export function withRetries<T>(
   fn: () => Promise<T>,
-  retries: number
+  retries: number,
 ): Promise<T> {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let attempt = 0;
     while (attempt <= retries) {
       try {
-        const result = await fn();
-        return resolve(result);
+        fn()
+          .then((res) => {
+            if (attempt === retries) return resolve(res);
+            return resolve(res);
+          })
+          .catch((err) => {
+            if (attempt === retries) return reject(err);
+            attempt++;
+          });
       } catch (err) {
         if (attempt === retries) return reject(err);
         attempt++;
@@ -44,9 +51,9 @@ export function withTimeout<T>(promise: Promise<T>, ms?: number): Promise<T> {
       return res;
     }),
     new Promise<T>((_, reject) =>
-      controller.signal.addEventListener("abort", () =>
-        reject(new Error(`Request timed out after ${ms} ms`))
-      )
+      controller.signal.addEventListener('abort', () =>
+        reject(new Error(`Request timed out after ${ms} ms`)),
+      ),
     ),
   ]);
 }

@@ -2,8 +2,8 @@
  * Fetcher provides a universal HTTP client that supports fetch and XHR fallback.
  * Use it to perform HTTP requests with retries, timeouts, interceptors, and progress reporting.
  */
-import { fetchTransport } from "./transports/fetchTransport";
-import { xhrTransport } from "./transports/xhrTransport";
+import { fetchTransport } from './transports/fetchTransport';
+import { xhrTransport } from './transports/xhrTransport';
 
 /**
  * @interface
@@ -14,7 +14,7 @@ import { xhrTransport } from "./transports/xhrTransport";
  * - `retries`: Number of times to retry failed requests.
  * - `credentials`: Credentials mode for requests (e.g., 'same-origin', 'include', 'omit').
  */
-export interface FetcherConfig {
+interface FetcherConfig {
   baseURL?: string;
   headers?: Record<string, string>;
   timeout?: number;
@@ -23,38 +23,28 @@ export interface FetcherConfig {
 }
 
 /**
- * @interface
- * Configuration for individual requests.
- * - `timeout`: Override the default timeout for this request.
- * - `retries`: Override the default number of retries for this request.
- * - `headers`: Additional headers to include in this request.
- * - `method`: HTTP method (GET, POST, etc.).
- * - `body`: Request body for POST/PUT requests.
+ * Configuration for an individual request, extending RequestInit.
+ * Includes optional timeout and retries.
+ * @public
  */
-export interface RequestConfig extends RequestInit {
+interface RequestConfig extends RequestInit {
   timeout?: number;
   retries?: number;
 }
 
 /**
- * @typedef
- * Interceptor functions for modifying requests and responses.
- * - `RequestInterceptor`: Function to modify request configuration before sending.
- * - `ResponseInterceptor`: Function to modify the response before returning it.
+ * A function to intercept and modify the request before it is sent.
+ * @public
  */
-export type RequestInterceptor = (
-  config: RequestInit
+type RequestInterceptor = (
+  config: RequestInit,
 ) => Promise<RequestInit> | RequestInit;
 
 /**
- * @typedef
- * Interceptor functions for modifying requests and responses.
- * - `RequestInterceptor`: Function to modify request configuration before sending.
- * - `ResponseInterceptor`: Function to modify the response before returning it.
+ * A function to intercept and modify the response after it is received.
+ * @public
  */
-export type ResponseInterceptor = (
-  response: Response
-) => Promise<Response> | Response;
+type ResponseInterceptor = (response: Response) => Promise<Response> | Response;
 
 /**
  * Fetcher is a universal HTTP client that supports fetch and XHR fallback.
@@ -125,7 +115,7 @@ export default class Fetcher {
   };
 
   constructor(config: FetcherConfig = {}) {
-    this.baseURL = config.baseURL || "";
+    this.baseURL = config.baseURL || '';
     this.defaultHeaders = config.headers || {};
     this.timeout = config.timeout || 0;
     this.retries = config.retries || 0;
@@ -192,9 +182,9 @@ export default class Fetcher {
         retries: config.retries ?? this.retries,
       });
       return this.handleResponse(response);
-    } catch (err: any) {
-      if (err?.name === "AbortError") {
-        throw new Error("Request timed out");
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === 'AbortError') {
+        throw new Error('Request timed out');
       }
       throw err;
     }
@@ -242,8 +232,8 @@ export default class Fetcher {
    *   .then(data => console.log(data))
    *   .catch(err => console.error(err));
    */
-  async get<T = any>(url: string, config: RequestConfig = {}): Promise<T> {
-    const response = await this.request(url, { ...config, method: "GET" });
+  async get<T = unknown>(url: string, config: RequestConfig = {}): Promise<T> {
+    const response = await this.request(url, { ...config, method: 'GET' });
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(`HTTP ${response.status}: ${errorText}`);
@@ -278,17 +268,17 @@ export default class Fetcher {
    *   .then(data => console.log(data))
    *   .catch(err => console.error(err));
    */
-  async post<T = any>(
+  async post<T = unknown>(
     url: string,
-    body: any,
-    config: RequestConfig = {}
+    body: unknown | Record<string, unknown> | FormData,
+    config: RequestConfig = {},
   ): Promise<T> {
     const response = await this.request(url, {
       ...config,
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify(body),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...this.mergeHeaders(config.headers),
       },
     });
@@ -324,17 +314,17 @@ export default class Fetcher {
    *   .then(data => console.log(data))
    *   .catch(err => console.error(err));
    */
-  async put<T = any>(
+  async put<T = unknown>(
     url: string,
-    body: any,
-    config: RequestConfig = {}
+    body: unknown | Record<string, unknown> | FormData,
+    config: RequestConfig = {},
   ): Promise<T> {
     const response = await this.request(url, {
       ...config,
-      method: "PUT",
+      method: 'PUT',
       body: JSON.stringify(body),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...this.mergeHeaders(config.headers),
       },
     });
@@ -367,8 +357,11 @@ export default class Fetcher {
    *   .then(data => console.log(data))
    *   .catch(err => console.error(err));
    */
-  async delete<T = any>(url: string, config: RequestConfig = {}): Promise<T> {
-    const response = await this.request(url, { ...config, method: "DELETE" });
+  async delete<T = unknown>(
+    url: string,
+    config: RequestConfig = {},
+  ): Promise<T> {
+    const response = await this.request(url, { ...config, method: 'DELETE' });
     return response.json() as Promise<T>;
   }
 
@@ -403,7 +396,7 @@ export default class Fetcher {
   async downloadWithProgress(
     url: string,
     onProgress: (loaded: number, total: number | null) => void,
-    config: RequestConfig = {}
+    config: RequestConfig = {},
   ): Promise<Blob> {
     const fullUrl = this.baseURL + url;
 
@@ -411,7 +404,7 @@ export default class Fetcher {
       url: fullUrl,
       config: {
         ...config,
-        method: "GET",
+        method: 'GET',
         headers: this.mergeHeaders(config.headers),
       },
       timeout: config.timeout ?? this.timeout,
@@ -446,17 +439,17 @@ export default class Fetcher {
    *   .then(data => console.log(data))
    *   .catch(err => console.error(err));
    */
-  async postWithUploadProgress<T = any>(
+  async postWithUploadProgress<T = unknown>(
     url: string,
     body: FormData | Blob | string,
     onUploadProgress: (event: ProgressEvent) => void,
-    config: RequestConfig = {}
+    config: RequestConfig = {},
   ): Promise<T> {
     const fullUrl = this.baseURL + url;
 
     const response = await xhrTransport({
       url: fullUrl,
-      method: "POST",
+      method: 'POST',
       headers: this.mergeHeaders(config.headers) as Record<string, string>,
       body,
       timeout: config.timeout ?? this.timeout,
@@ -466,3 +459,10 @@ export default class Fetcher {
     return response.json() as Promise<T>;
   }
 }
+
+export type {
+  FetcherConfig,
+  RequestConfig,
+  RequestInterceptor,
+  ResponseInterceptor,
+};
