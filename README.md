@@ -55,8 +55,10 @@ api.get("/products").then((data) => console.log("CJS response:", data));
 
 ### IIFE (Browser)
 
+After publishing, you can include the UMD/IIFE build via a CDN like unpkg:
+
 ```html
-<script src="dist/index.js"></script>
+<script src="https://unpkg.com/fetcher/dist/index.js"></script>
 <script>
   const api = fetcher.create({
     baseURL: "https://api.example.com",
@@ -65,6 +67,10 @@ api.get("/products").then((data) => console.log("CJS response:", data));
 
   api.get("/users").then((data) => {
     console.log("IIFE GET response:", data);
+  });
+
+  api.post("/users", { name: "Alice" }).then((data) => {
+    console.log("IIFE POST response:", data);
   });
 
   api.downloadWithProgress("/file.zip", (loaded, total) => {
