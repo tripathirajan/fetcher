@@ -5,7 +5,12 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest",
+    "test:file": "vitest --run",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest run --coverage",
+    "test:coverage:html": "vitest run --coverage --reporter html",
+    "test:coverage:json": "vitest run --coverage --reporter json",
     "build": "tsup src/index.ts --format esm,cjs,iife --dts --clean",
     "docs": "typedoc"
   },
@@ -21,10 +26,11 @@
     "url": "https://github.com/yourusername/fetcher/issues"
   },
   "homepage": "https://github.com/yourusername/fetcher#readme",
-  "dependencies": {},
   "devDependencies": {
-    "typescript": "^5.8.3",
+    "jsdom": "^26.1.0",
     "tsup": "^8.5.0",
-    "typedoc": "^0.28.7"
+    "typedoc": "^0.28.7",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   }
 }

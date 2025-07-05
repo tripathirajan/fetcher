@@ -176,19 +176,28 @@ export default class Fetcher {
       ...config,
       headers: this.mergeHeaders(config.headers),
     };
-
+    if (this.credentials) {
+      finalConfig.credentials = this.credentials;
+    }
     if (this.requestInterceptor) {
       finalConfig = await this.requestInterceptor(finalConfig);
     }
 
     const fullUrl = this.baseURL + url;
-
-    return fetchTransport({
-      url: fullUrl,
-      config: finalConfig,
-      timeout: config.timeout ?? this.timeout,
-      retries: config.retries ?? this.retries,
-    }).then((r) => this.handleResponse(r));
+    try {
+      const response = await fetchTransport({
+        url: fullUrl,
+        config: finalConfig,
+        timeout: config.timeout ?? this.timeout,
+        retries: config.retries ?? this.retries,
+      });
+      return this.handleResponse(response);
+    } catch (err: any) {
+      if (err?.name === "AbortError") {
+        throw new Error("Request timed out");
+      }
+      throw err;
+    }
   }
 
   /**
@@ -235,6 +244,10 @@ export default class Fetcher {
    */
   async get<T = any>(url: string, config: RequestConfig = {}): Promise<T> {
     const response = await this.request(url, { ...config, method: "GET" });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP ${response.status}: ${errorText}`);
+    }
     return response.json() as Promise<T>;
   }
 
