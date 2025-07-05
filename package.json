@@ -1,5 +1,5 @@
 {
-  "name": "fetcher",
+  "name": "@tripathirajan/fetcher",
   "version": "1.0.0",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
