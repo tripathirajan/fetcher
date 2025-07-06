@@ -1,13 +1,22 @@
-import fetcher from '@tripathirajan/fetcher';
+// @ts-expect-error: fetcher types may not be available in this example context
+import fetcher, { FetcherInstance, RequestConfig } from '@tripathirajan/fetcher';
 
-async function main() {
-  const api = fetcher.create({
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+async function main(): Promise<void> {
+  const config: RequestConfig = {
     baseURL: 'https://api.example.com',
     timeout: 5000,
-  });
+  };
 
-  const res = await api.get('/endpoint');
-  const data = await res.json();
+  const api: FetcherInstance = fetcher.create(config);
+
+  const res = await api.get('/users');
+  const data: User[] = await res.json();
   console.log('TypeScript response:', data);
 }
 
