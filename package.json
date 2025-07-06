@@ -18,6 +18,7 @@
     "node": ">=14.0.0"
   },
   "scripts": {
+    "prepare": "husky install",
     "clean:build": "rm -rf dist",
     "test": "node --max-old-space-size=8192 ./node_modules/.bin/vitest --run __test__/*.spec.ts",
     "test:watch": "npm test -- --watch",
@@ -31,7 +32,7 @@
     "prebuild": "npm run clean:build && npm run lint && npm run format && npm run test",
     "build": "tsup src/index.ts",
     "docs": "typedoc",
-    "prepare": "husky install"
+    "deploy-docs": "npm run docs && rm -rf gh-pages/* && cp -r docs/* gh-pages/ && cd gh-pages && git add . && git commit -m \"docs: update\" && git push"
   },
   "keywords": [],
   "author": "",
