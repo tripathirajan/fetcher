@@ -1,22 +1,6 @@
 import { withRetries, withTimeout } from '../utils';
 import HttpError from '../HttpError';
-
-/**
- * Options for the fetchTransport function.
- *
- * @property url - The full request URL.
- * @property config - The RequestInit configuration object.
- * @property timeout - Optional timeout in milliseconds.
- * @property retries - Optional number of retries.
- * @property onDownloadProgress - Optional callback for download progress.
- */
-export interface FetchTransportOptions {
-  url: string;
-  config: RequestInit;
-  timeout?: number;
-  retries?: number;
-  onDownloadProgress?: (loaded: number, total: number | null) => void;
-}
+import type { FetchTransportOptions } from '../types';
 
 /**
  * Performs an HTTP request using the Fetch API with optional timeout, retries, and download progress.

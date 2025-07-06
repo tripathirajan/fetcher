@@ -1,25 +1,4 @@
-/**
- * Options for the xhrTransport function.
- *
- * @property url - The full request URL.
- * @property method - The HTTP method (GET, POST, etc.).
- * @property headers - Optional headers to set.
- * @property body - Optional request body.
- * @property timeout - Optional timeout in milliseconds.
- * @property onDownloadProgress - Optional callback for download progress.
- * @property onUploadProgress - Optional callback for upload progress.
- */
-export interface XhrTransportOptions {
-  url: string;
-  method: string;
-  headers?: Record<string, string>;
-  body?: Document | XMLHttpRequestBodyInit | null;
-  timeout?: number;
-  onDownloadProgress?: (event: ProgressEvent) => void;
-  onUploadProgress?: (event: ProgressEvent) => void;
-  credentials?: RequestCredentials; // Optional credentials mode
-  // e.g., 'same-origin', 'include', 'omit'
-}
+import type { XhrTransportOptions } from '../types';
 
 /**
  * Performs an HTTP request using XMLHttpRequest with optional progress and timeout support.

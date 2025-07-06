@@ -20,7 +20,7 @@ describe('Fetcher - POST', () => {
 
     const body = { name: 'Test' };
 
-    const data = await api.post('/items', body);
+    const data = (await api.post('/items', body)) as Response;
 
     expect(fetch).toHaveBeenCalledWith(
       'https://api.example.com/items',
@@ -33,7 +33,7 @@ describe('Fetcher - POST', () => {
       }),
     );
 
-    expect(data).toEqual(mockResponse);
+    expect(await data.json()).toEqual(mockResponse);
   });
   it('should set withCredentials in XHR upload', async () => {
     const sendMock = vi.fn();

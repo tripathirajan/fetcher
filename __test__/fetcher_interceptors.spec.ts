@@ -36,10 +36,10 @@ describe('Fetcher - Interceptors', () => {
     api.interceptors.request.use(requestInterceptor);
     api.interceptors.response.use(responseInterceptor);
 
-    const data = await api.get('/intercept');
+    const data = (await api.get('/intercept')) as Response;
 
     expect(requestInterceptor).toHaveBeenCalled();
     expect(responseInterceptor).toHaveBeenCalled();
-    expect(data).toEqual(mockResponse);
+    expect(await data.json()).toEqual(mockResponse);
   });
 });

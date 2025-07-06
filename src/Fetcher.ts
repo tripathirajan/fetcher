@@ -4,47 +4,13 @@
  */
 import { fetchTransport } from './transports/fetchTransport';
 import { xhrTransport } from './transports/xhrTransport';
-
-/**
- * @interface
- * Configuration options for the Fetcher client.
- * - `baseURL`: The base URL for all requests.
- * - `headers`: Default headers to include in every request.
- * - `timeout`: Default timeout for requests in milliseconds.
- * - `retries`: Number of times to retry failed requests.
- * - `credentials`: Credentials mode for requests (e.g., 'same-origin', 'include', 'omit').
- */
-interface FetcherConfig {
-  baseURL?: string;
-  headers?: Record<string, string>;
-  timeout?: number;
-  retries?: number;
-  credentials?: RequestCredentials;
-}
-
-/**
- * Configuration for an individual request, extending RequestInit.
- * Includes optional timeout and retries.
- * @public
- */
-interface RequestConfig extends RequestInit {
-  timeout?: number;
-  retries?: number;
-}
-
-/**
- * A function to intercept and modify the request before it is sent.
- * @public
- */
-type RequestInterceptor = (
-  config: RequestInit,
-) => Promise<RequestInit> | RequestInit;
-
-/**
- * A function to intercept and modify the response after it is received.
- * @public
- */
-type ResponseInterceptor = (response: Response) => Promise<Response> | Response;
+import type {
+  FetcherConfig,
+  RequestConfig,
+  RequestInterceptor,
+  ResponseInterceptor,
+  Interceptors,
+} from './types';
 
 /**
  * Fetcher is a universal HTTP client that supports fetch and XHR fallback.
@@ -63,10 +29,37 @@ type ResponseInterceptor = (response: Response) => Promise<Response> | Response;
  * });
  */
 export default class Fetcher {
+  /**
+   * The base URL for all requests.
+   * This is prepended to the request path when making requests.
+   * @type {string}
+   */
   baseURL: string;
+  /**
+   * Default headers to include in every request.
+   * These headers will be merged with any headers provided in individual requests.
+   * @type {Record<string, string>}
+   */
   defaultHeaders: Record<string, string>;
-  timeout: number = 6000; // Default timeout of 60 seconds
+  /**
+   * Default timeout for requests in milliseconds.
+   * If a request takes longer than this time, it will be aborted.
+   * @type {number}
+   */
+  timeout: number = 6000; // Default timeout of 6 seconds
+  /**
+   * Number of times to retry failed requests.
+   * If a request fails, it will be retried this many times before throwing an error.
+   * @type {number}
+   */
   retries: number = 0;
+  /**
+   * Credentials mode for requests.
+   * - 'same-origin': Send cookies for same-origin requests.
+   * - 'include': Always send cookies, even for cross-origin requests.
+   * - 'omit': Never send cookies.
+   * @type {RequestCredentials}
+   */
   credentials?: RequestCredentials;
 
   private requestInterceptor?: RequestInterceptor;
@@ -74,10 +67,15 @@ export default class Fetcher {
 
   /**
    * Interceptors for modifying requests and responses.
-   * - `request`: Interceptor for modifying request configuration.
-   * - `response`: Interceptor for modifying response before returning.
+   * This object provides methods to register request and response interceptors.
+   * @type {Interceptors}
    */
-  interceptors = {
+  interceptors: Interceptors = {
+    /**
+     * Middleware for request interceptors.
+     * This allows you to register functions that modify the request before it is sent.
+     * @type {RequestInterceptorMiddleware}
+     */
     request: {
       /**
        * @param fn - The request interceptor function to modify requests.
@@ -94,6 +92,11 @@ export default class Fetcher {
         this.requestInterceptor = fn;
       },
     },
+    /**
+     * Middleware for response interceptors.
+     * This allows you to register functions that modify the response after it is received.
+     * @type {ResponseInterceptorMiddleware}
+     */
     response: {
       /**
        * @param fn - The response interceptor function to modify responses.
@@ -140,11 +143,13 @@ export default class Fetcher {
    * Performs a raw HTTP request.
    * @param url - The request path relative to baseURL.
    * @param config - Request configuration.
-   * @returns A Promise resolving to the Response.
+   * @returns A Promise resolving to the Response object.
    * @example
    * fetcher.request('/users', {
    *   method: 'GET',
-   *   headers: { 'Authorization': 'Bearer token' },
+   *   headers: {
+   *     'Authorization': 'Bearer token'
+   *   },
    *   timeout: 5000, // Override default timeout
    *   retries: 3, // Retry failed requests up to 3 times
    * })
@@ -194,51 +199,15 @@ export default class Fetcher {
    * Performs a GET request and parses JSON.
    * @param url - The request path.
    * @param config - Optional request configuration.
-   * @returns A Promise resolving to the parsed JSON data.
+   * @returns A Promise resolving to the Response.
    * @example
    * fetcher.get('/users')
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.get('/users', { headers: { 'Authorization': 'Bearer token' } })
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.get('/users', { timeout: 5000 }) // Override default timeout
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.get('/users', { retries: 3 }) // Retry failed requests up to 3 times
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.get('/users', { method: 'GET' }) // Explicitly set the method
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.get('/users', { body: null }) // No body for GET requests
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.get('/users', { headers: { 'Accept': 'application/json' } }) // Set Accept header
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.get('/users', { headers: { 'X-Custom-Header': 'value' } }) // Custom headers
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.get('/users', { headers: { 'Content-Type': 'application/json' } }) // Set Content-Type header
+   *   .then(response => response.json())
    *   .then(data => console.log(data))
    *   .catch(err => console.error(err));
    */
-  async get<T = unknown>(url: string, config: RequestConfig = {}): Promise<T> {
-    const response = await this.request(url, { ...config, method: 'GET' });
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`HTTP ${response.status}: ${errorText}`);
-    }
-    return response.json() as Promise<T>;
+  async get(url: string, config: RequestConfig = {}): Promise<Response> {
+    return this.request(url, { ...config, method: 'GET' });
   }
 
   /**
@@ -246,34 +215,19 @@ export default class Fetcher {
    * @param url - The request path.
    * @param body - The JSON payload.
    * @param config - Optional request configuration.
-   * @returns A Promise resolving to the parsed JSON response.
+   * @returns A Promise resolving to the Response.
    * @example
    * fetcher.post('/users', { name: 'John Doe' })
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.post('/users', { name: 'John Doe' }, { headers: { 'Authorization': 'Bearer token' } })
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.post('/users', { name: 'John Doe' }, { timeout: 5000 }) // Override default timeout
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.post('/users', { name: 'John Doe' }, { retries: 3 }) // Retry failed requests up to 3 times
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.post('/users', { name: 'John Doe' }, { method: 'POST' }) // Explicitly set the method
+   *   .then(response => response.json())
    *   .then(data => console.log(data))
    *   .catch(err => console.error(err));
    */
-  async post<T = unknown>(
+  async post(
     url: string,
     body: unknown | Record<string, unknown> | FormData,
     config: RequestConfig = {},
-  ): Promise<T> {
-    const response = await this.request(url, {
+  ): Promise<Response> {
+    return this.request(url, {
       ...config,
       method: 'POST',
       body: JSON.stringify(body),
@@ -282,7 +236,6 @@ export default class Fetcher {
         ...this.mergeHeaders(config.headers),
       },
     });
-    return response.json() as Promise<T>;
   }
 
   /**
@@ -290,36 +243,14 @@ export default class Fetcher {
    * @param url - The request path.
    * @param body - The JSON payload.
    * @param config - Optional request configuration.
-   * @returns A Promise resolving to the parsed JSON response.
-   * @example
-   * fetcher.put('/users/1', { name: 'Jane Doe' })
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.put('/users/1', { name: 'Jane Doe' }, {
-   *   headers: { 'Authorization': 'Bearer token' }
-   * })
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.put('/users/1', { name: 'Jane Doe' }, {
-   *   timeout: 5000 // Override default timeout
-   * })
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.put('/users/1', { name: 'Jane Doe' }, {
-   *   retries: 3 // Retry failed requests up to 3 times
-   * })
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
+   * @returns A Promise resolving to the response.
    */
-  async put<T = unknown>(
+  async put(
     url: string,
     body: unknown | Record<string, unknown> | FormData,
     config: RequestConfig = {},
-  ): Promise<T> {
-    const response = await this.request(url, {
+  ): Promise<Response> {
+    return this.request(url, {
       ...config,
       method: 'PUT',
       body: JSON.stringify(body),
@@ -328,41 +259,20 @@ export default class Fetcher {
         ...this.mergeHeaders(config.headers),
       },
     });
-    return response.json() as Promise<T>;
   }
 
   /**
    * Performs a DELETE request.
    * @param url - The request path.
    * @param config - Optional request configuration.
-   * @returns A Promise resolving to the parsed JSON response.
+   * @returns A Promise resolving to the Response.
    * @example
    * fetcher.delete('/users/1')
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.delete('/users/1', { headers: { 'Authorization': 'Bearer token' } })
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.delete('/users/1', { timeout: 5000 }) // Override default timeout
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.delete('/users/1', { retries: 3 }) // Retry failed requests up to 3 times
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.delete('/users/1', { method: 'DELETE' }) // Explicitly set the method
-   *   .then(data => console.log(data))
+   *   .then(response => console.log('Deleted successfully'))
    *   .catch(err => console.error(err));
    */
-  async delete<T = unknown>(
-    url: string,
-    config: RequestConfig = {},
-  ): Promise<T> {
-    const response = await this.request(url, { ...config, method: 'DELETE' });
-    return response.json() as Promise<T>;
+  async delete(url: string, config: RequestConfig = {}): Promise<Response> {
+    return this.request(url, { ...config, method: 'DELETE' });
   }
 
   /**
@@ -370,13 +280,13 @@ export default class Fetcher {
    * @param url - The request path.
    * @param onProgress - Callback for download progress.
    * @param config - Optional request configuration.
-   * @returns A Promise resolving to the Blob of the downloaded data.
+   * @returns A Promise resolving to the downloaded Blob.
    * @example
    * fetcher.downloadWithProgress('/file.zip', (loaded, total) => {
-   *   console.log(`Downloaded ${loaded} bytes of ${total} bytes`);
+   *   const percentComplete = total ? (loaded / total) * 100 : 0;
+   *   console.log(`Download progress: ${percentComplete}%`);
    * })
    *   .then(blob => {
-   *     // Handle the downloaded Blob (e.g., save it)
    *     const url = URL.createObjectURL(blob);
    *     const a = document.createElement('a');
    *     a.href = url;
@@ -386,12 +296,6 @@ export default class Fetcher {
    *     document.body.removeChild(a);
    *   })
    *   .catch(err => console.error(err));
-   * @example
-   * fetcher.downloadWithProgress('/file.zip', (loaded, total) => {
-   *   console.log(`Downloaded ${loaded} bytes of ${total} bytes`);
-   * }, {
-   *   timeout: 5000 // Override default timeout
-   * })
    */
   async downloadWithProgress(
     url: string,
@@ -421,33 +325,25 @@ export default class Fetcher {
    * @param body - The payload to upload.
    * @param onUploadProgress - Callback for upload progress.
    * @param config - Optional request configuration.
-   * @returns A Promise resolving to the parsed JSON response.
+   * @returns A Promise resolving to the Response.
    * @example
    * fetcher.postWithUploadProgress('/upload', formData, (event) => {
-   *   const percent = Math.round((event.loaded * 100) / event.total);
-   *   console.log(`Upload progress: ${percent}%`);
+   *   const percentComplete = (event.loaded / event.total) * 100;
+   *   console.log(`Upload progress: ${percentComplete}%`);
    * })
-   *   .then(data => console.log(data))
-   *   .catch(err => console.error(err));
-   * @example
-   * fetcher.postWithUploadProgress('/upload', formData, (event) => {
-   *   const percent = Math.round((event.loaded * 100) / event.total);
-   *   console.log(`Upload progress: ${percent}%`);
-   * }, {
-   *   timeout: 5000 // Override default timeout
-   * })
+   *   .then(response => response.json())
    *   .then(data => console.log(data))
    *   .catch(err => console.error(err));
    */
-  async postWithUploadProgress<T = unknown>(
+  async postWithUploadProgress(
     url: string,
     body: FormData | Blob | string,
     onUploadProgress: (event: ProgressEvent) => void,
     config: RequestConfig = {},
-  ): Promise<T> {
+  ): Promise<Response> {
     const fullUrl = this.baseURL + url;
 
-    const response = await xhrTransport({
+    return xhrTransport({
       url: fullUrl,
       method: 'POST',
       headers: this.mergeHeaders(config.headers) as Record<string, string>,
@@ -455,14 +351,5 @@ export default class Fetcher {
       timeout: config.timeout ?? this.timeout,
       onUploadProgress,
     });
-
-    return response.json() as Promise<T>;
   }
 }
-
-export type {
-  FetcherConfig,
-  RequestConfig,
-  RequestInterceptor,
-  ResponseInterceptor,
-};

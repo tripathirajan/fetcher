@@ -1,5 +1,22 @@
 # @tripathirajan/fetcher
 
+![npm version](https://img.shields.io/npm/v/fetcher)
+![License](https://img.shields.io/github/license/tripathirajan/fetcher)
+
+## 📑 Table of Contents
+
+- [Features](#-features)
+- [Installation](#-installation)
+- [Usage Examples](#-usage-examples)
+  - [ESM](#esm-nodejs-or-bundlers)
+  - [CommonJS](#commonjs)
+  - [IIFE (Browser)](#iife-browser)
+- [API Reference](#️-api-reference)
+- [Documentation](#-documentation)
+- [Contributing](#-contributing)
+- [Supported Environments](#-supported-environments)
+- [License](#-license)
+
 A modern, universal HTTP client library for TypeScript and JavaScript that supports fetch and XHR fallback, timeouts, retries, interceptors, and progress reporting.
 
 ## ✨ Features
@@ -13,7 +30,7 @@ A modern, universal HTTP client library for TypeScript and JavaScript that suppo
 ## 📦 Installation
 
 ```bash
-npm install fetcher
+npm install @tripathirajan/fetcher
 ```
 
 ## 🚀 Usage Examples
@@ -21,7 +38,7 @@ npm install fetcher
 ### ESM (Node.js or Bundlers)
 
 ```typescript
-import fetcher from 'fetcher';
+import fetcher from '@tripathirajan/fetcher';
 
 const api = fetcher.create({
   baseURL: 'https://api.example.com',
@@ -30,17 +47,21 @@ const api = fetcher.create({
   credentials: 'include',
 });
 
-api.get('/users').then((data) => console.log('GET response:', data));
+api.get('/users').then(async (res) => {
+  const data = await res.json();
+  console.log('GET response:', data);
+});
 
-api
-  .post('/users', { name: 'Alice' })
-  .then((data) => console.log('POST response:', data));
+api.post('/users', { name: 'Alice' }).then(async (res) => {
+  const data = await res.json();
+  console.log('POST response:', data);
+});
 ```
 
 ### CommonJS
 
 ```javascript
-const fetcher = require('fetcher').default;
+const fetcher = require('@tripathirajan/fetcher').default;
 
 const api = fetcher.create({
   baseURL: 'https://api.example.com',
@@ -48,7 +69,10 @@ const api = fetcher.create({
   retries: 2,
 });
 
-api.get('/products').then((data) => console.log('CJS response:', data));
+api.get('/products').then(async (res) => {
+  const data = await res.json();
+  console.log('CJS response:', data);
+});
 ```
 
 ### IIFE (Browser)
@@ -56,18 +80,20 @@ api.get('/products').then((data) => console.log('CJS response:', data));
 After publishing, you can include the UMD/IIFE build via a CDN like unpkg:
 
 ```html
-<script src="https://unpkg.com/fetcher/dist/index.js"></script>
+<script src="https://unpkg.com/@tripathirajan/fetcher/dist/fetcher.min.js"></script>
 <script>
   const api = fetcher.create({
     baseURL: 'https://api.example.com',
     timeout: 5000,
   });
 
-  api.get('/users').then((data) => {
+  api.get('/users').then(async (res) => {
+    const data = await res.json();
     console.log('IIFE GET response:', data);
   });
 
-  api.post('/users', { name: 'Alice' }).then((data) => {
+  api.post('/users', { name: 'Alice' }).then(async (res) => {
+    const data = await res.json();
     console.log('IIFE POST response:', data);
   });
 
@@ -95,13 +121,40 @@ Creates a new Fetcher instance.
 
 ### Methods
 
-- `get<T>(url, config?)`: GET request returning JSON
-- `post<T>(url, body, config?)`: POST request with JSON
-- `put<T>(url, body, config?)`: PUT request with JSON
-- `delete<T>(url, config?)`: DELETE request returning JSON
+All methods return a native `Response` object.
+You must call `.json()`, `.text()`, or other methods to parse.
+
+- `get(url, config?)`: GET request returning `Response`
+- `post(url, body, config?)`: POST request returning `Response`
+- `put(url, body, config?)`: PUT request returning `Response`
+- `delete(url, config?)`: DELETE request returning `Response`
 - `downloadWithProgress(url, onProgress, config?)`: Download file with progress
 - `postWithUploadProgress(url, body, onUploadProgress, config?)`: POST with upload progress (XHR)
 
+## 📚 Documentation
+
+Full API documentation is available at:
+
+[https://tripathirajan.github.io/fetcher/](https://tripathirajan.github.io/fetcher/)
+
+## ✨ Quickstart
+
+```typescript
+import fetcher from '@tripathirajan/fetcher';
+const res = await fetcher.get('https://api.example.com/data');
+const json = await res.json();
+```
+
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome! Feel free to open an issue or submit a pull request.
+
+## 🌐 Supported Environments
+
+- Node.js 16+
+- All modern browsers
+- Internet Explorer 11 (with polyfills for Fetch/XHR)
+
 ## 🧩 License
 
-MIT
+MIT © 2024 Rajan Tripathi

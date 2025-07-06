@@ -1,9 +1,5 @@
-import Fetcher, {
-  FetcherConfig,
-  RequestConfig,
-  RequestInterceptor,
-  ResponseInterceptor,
-} from './Fetcher';
+import Fetcher from './Fetcher';
+import type { FetcherConfig, RequestConfig } from './types';
 
 /**
  * A default Fetcher instance that can be used directly.
@@ -71,9 +67,4 @@ fetcher.create = (config: FetcherConfig) => new Fetcher(config);
 export default fetcher;
 
 export { Fetcher };
-export type {
-  FetcherConfig,
-  RequestConfig,
-  RequestInterceptor,
-  ResponseInterceptor,
-};
+export type * from './types';

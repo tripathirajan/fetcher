@@ -30,10 +30,10 @@ describe('Fetcher - Retry & Timeout', () => {
     // Fast-forward timers to allow retry
     vi.advanceTimersByTime(1000);
 
-    const data = await promise;
+    const data = (await promise) as Response;
 
     expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(data).toEqual(mockResponse);
+    expect(await data.json()).toEqual(mockResponse);
 
     vi.useRealTimers();
   });
