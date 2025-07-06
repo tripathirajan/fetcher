@@ -9,6 +9,8 @@ Thank you for your interest in contributing! Here are a few guidelines to help y
 
 ## 🚀 Pull Requests
 
+This project follows the [Conventional Commits](https://www.conventionalcommits.org/) specification for commit messages. Please use descriptive commit messages like `feat:`, `fix:`, and `docs:` when contributing.
+
 - Fork the repository and create your branch from `main`.
 - Use clear commit messages and follow conventional commits.
 - Add tests for new features or bug fixes.

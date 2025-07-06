@@ -47,6 +47,9 @@
     "url": "https://github.com/yourusername/fetcher/issues"
   },
   "homepage": "https://github.com/yourusername/fetcher#readme",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
