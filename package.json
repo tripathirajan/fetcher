@@ -20,6 +20,7 @@
   "scripts": {
     "prepare": "husky install",
     "clean:build": "rm -rf dist",
+    "pretest": "npm run lint && npm run format:check",
     "test": "node --max-old-space-size=8192 ./node_modules/.bin/vitest --run __test__/*.spec.ts",
     "test:watch": "npm test -- --watch",
     "test:coverage": "node --max-old-space-size=6144 ./node_modules/.bin/vitest run --coverage",
@@ -29,7 +30,7 @@
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write \"src/**/*.ts\" \"__test__/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"__test__/**/*.ts\"",
-    "prebuild": "npm run clean:build && npm run lint && npm run format && npm run test",
+    "prebuild": "npm run clean:build && npm run lint && npm run format:check && npm run test",
     "build": "tsup",
     "docs": "typedoc",
     "docs:publish": "npm run docs && gh-pages -d docs"
