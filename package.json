@@ -51,12 +51,12 @@
   "description": "A universal HTTP client for TypeScript and JavaScript with fetch and XHR fallback, supporting timeouts, retries, interceptors, and progress reporting.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/fetcher.git"
+    "url": "https://github.com/tripathirajan/fetcher.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/fetcher/issues"
+    "url": "https://github.com/tripathirajan/fetcher/issues"
   },
-  "homepage": "https://github.com/yourusername/fetcher#readme",
+  "homepage": "https://github.com/tripathirajan/fetcher#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
