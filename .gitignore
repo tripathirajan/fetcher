@@ -20,3 +20,9 @@ yarn-error.log*
 
 # Env files
 .env
+
+# docs
+/docs
+
+# Coverage
+/coverage
