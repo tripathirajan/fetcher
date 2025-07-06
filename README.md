@@ -155,6 +155,26 @@ Contributions, issues and feature requests are welcome! Feel free to open an iss
 - All modern browsers
 - Internet Explorer 11 (with polyfills for Fetch/XHR)
 
+## 📂 Examples
+
+See the [`examples`](./examples) folder for Node.js and Browser usage.
+
+## 📈 Bundle Size
+
+![Bundle size](https://badgen.net/bundlephobia/minzip/@tripathirajan/fetcher)
+
+## 🛠 Compatibility
+
+| Environment          | Version |
+| -------------------- | ------- |
+| Node.js              | >=16    |
+| Modern Browsers      | ✅      |
+| IE11 (with polyfill) | ✅      |
+
+## 💖 Support
+
+If you find this library useful, consider starring the repo or [buying me a coffee](https://buymeacoffee.com/tripathirajan).
+
 ## 🧩 License
 
 MIT © 2024 Rajan Tripathi
