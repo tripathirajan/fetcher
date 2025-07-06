@@ -48,7 +48,7 @@
   },
   "homepage": "https://github.com/yourusername/fetcher#readme",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
