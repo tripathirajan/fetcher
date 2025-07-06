@@ -23,10 +23,9 @@ import Fetcher, {
 function create(config: FetcherConfig) {
   return new Fetcher(config);
 }
+const fetcher = { create };
 
-export default {
-  create,
-};
+export default fetcher;
 
 export { Fetcher };
 export type {

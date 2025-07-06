@@ -1,20 +1,24 @@
 {
   "name": "@tripathirajan/fetcher",
-  "version": "1.0.0",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "type": "module",
+  "version": "1.0.4",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    }
+  },
   "files": [
-    "dist",
-    "src",
-    "README.md",
-    "LICENSE"
+    "dist"
   ],
   "engines": {
     "node": ">=14.0.0"
   },
   "scripts": {
+    "clean:build": "rm -rf dist",
     "test": "node --max-old-space-size=8192 ./node_modules/.bin/vitest --run __test__/*.spec.ts",
     "test:watch": "npm test -- --watch",
     "test:coverage": "node --max-old-space-size=6144 ./node_modules/.bin/vitest run --coverage",
@@ -24,8 +28,8 @@
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write \"src/**/*.ts\" \"__test__/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"__test__/**/*.ts\"",
-    "prebuild": "npm run lint && npm run format && npm run test",
-    "build": "tsup src/index.ts --format esm,cjs,iife --dts --clean",
+    "prebuild": "npm run clean:build && npm run lint && npm run format && npm run test",
+    "build": "tsup src/index.ts",
     "docs": "typedoc",
     "prepare": "husky install"
   },

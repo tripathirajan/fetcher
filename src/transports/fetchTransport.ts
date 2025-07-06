@@ -1,4 +1,5 @@
 import { withRetries, withTimeout } from '../utils';
+import HttpError from '../HttpError';
 
 /**
  * Options for the fetchTransport function.
@@ -38,7 +39,9 @@ export async function fetchTransport(
     }
 
     const response = await fetch(url, finalConfig);
-
+    if (!response?.ok) {
+      throw new HttpError(response.status, response.statusText, response.type);
+    }
     if (onDownloadProgress && response.body) {
       const reader = response.body.getReader();
       const contentLength =

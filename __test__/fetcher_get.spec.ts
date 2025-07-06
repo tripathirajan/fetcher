@@ -19,7 +19,7 @@ describe('Fetcher - GET', () => {
       baseURL: 'https://api.example.com',
     });
 
-    await expect(api.get('/error')).rejects.toThrow('HTTP 500: Internal error');
+    await expect(api.get('/error')).rejects.toThrow('HttpError');
   });
 
   // it('should include credentials if configured', async () => {
