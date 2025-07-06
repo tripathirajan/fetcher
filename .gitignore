@@ -25,4 +25,4 @@ yarn-error.log*
 /coverage
 
 # docs
-/docs
+docs/
