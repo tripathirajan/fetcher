@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Fetcher Browser Example</title>
+    <script src="https://unpkg.com/@tripathirajan/fetcher/dist/fetcher.min.js"></script>
+</head>
+
+<body>
+    <script>
+        const api = fetcher.create({
+            baseURL: 'https://api.example.com',
+            timeout: 5000
+        });
+
+        api.get('/endpoint').then(async (res) => {
+            const data = await res.json();
+            console.log('Browser response:', data);
+        });
+    </script>
+</body>
+
+</html>
