@@ -2,7 +2,7 @@
 
 ![npm](https://img.shields.io/npm/v/@tripathirajan/fetcher)
 ![License](https://img.shields.io/github/license/tripathirajan/fetcher)
-![Bundle size](https://badgen.net/bundlephobia/minzip/@tripathirajan/fetcher)
+![Bundle size](https://bundlephobia.com/package/@tripathirajan/fetcher)
 
 A modern, universal HTTP client library for TypeScript and JavaScript that supports fetch and XHR fallback, timeouts, retries, interceptors, and progress reporting.
 
