@@ -32,7 +32,7 @@
     "prebuild": "npm run clean:build && npm run lint && npm run format && npm run test",
     "build": "tsup src/index.ts",
     "docs": "typedoc",
-    "deploy-docs": "npm run docs && rm -rf gh-pages/* && cp -r docs/* gh-pages/ && cd gh-pages && git add . && git commit -m \"docs: update\" && git push"
+    "docs:publish": "npm run docs && gh-pages -d docs"
   },
   "keywords": [],
   "author": "",
@@ -54,6 +54,7 @@
     "eslint": "^9.30.1",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
+    "gh-pages": "^6.3.0",
     "globals": "^16.3.0",
     "husky": "^9.1.7",
     "jsdom": "^26.1.0",
