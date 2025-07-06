@@ -1,4 +1,3 @@
-
 import Fetcher, {
   FetcherConfig,
   RequestConfig,
@@ -39,8 +38,10 @@ fetcher.get = defaultInstance.get.bind(defaultInstance);
 fetcher.post = defaultInstance.post.bind(defaultInstance);
 fetcher.put = defaultInstance.put.bind(defaultInstance);
 fetcher.delete = defaultInstance.delete.bind(defaultInstance);
-fetcher.downloadWithProgress = defaultInstance.downloadWithProgress.bind(defaultInstance);
-fetcher.postWithUploadProgress = defaultInstance.postWithUploadProgress.bind(defaultInstance);
+fetcher.downloadWithProgress =
+  defaultInstance.downloadWithProgress.bind(defaultInstance);
+fetcher.postWithUploadProgress =
+  defaultInstance.postWithUploadProgress.bind(defaultInstance);
 fetcher.interceptors = defaultInstance.interceptors;
 
 /**
