@@ -30,7 +30,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"__test__/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"__test__/**/*.ts\"",
     "prebuild": "npm run clean:build && npm run lint && npm run format && npm run test",
-    "build": "tsup src/index.ts",
+    "build": "tsup",
     "docs": "typedoc",
     "docs:publish": "npm run docs && gh-pages -d docs"
   },
