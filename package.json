@@ -35,7 +35,17 @@
     "docs": "typedoc",
     "docs:publish": "npm run docs && gh-pages -d docs"
   },
-  "keywords": [],
+  "keywords": [
+    "http",
+    "fetch",
+    "xhr",
+    "typescript",
+    "universal",
+    "client",
+    "request",
+    "fetcher",
+    "ajax"
+  ],
   "author": "",
   "license": "MIT",
   "description": "A universal HTTP client for TypeScript and JavaScript with fetch and XHR fallback, supporting timeouts, retries, interceptors, and progress reporting.",
