@@ -1,15 +1,23 @@
 {
   "compilerOptions": {
     "target": "ES2019",
-    "module": "ESNext",
-    "lib": ["ES2019", "DOM"],
+    "module": "NodeNext",
+    "lib": [
+      "ES2019",
+      "DOM"
+    ],
     "declaration": true,
     "outDir": "dist",
-    "moduleResolution": "Node",
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
   },
-  "exclude": ["node_modules", "dist", "coverage"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "coverage"
+  ]
 }
