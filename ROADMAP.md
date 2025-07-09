@@ -23,8 +23,9 @@ A structured roadmap to guide the ongoing development and improvement of `@tripa
 
 ## 🛠️ PATCH WORK (v1.0.x)
 
-Focus on bug fixes, internal improvements, and DX polish.
-
+- [ ] Create `FetcherError` class for better error context
+- [ ] Add `@throws` JSDoc tags for error-producing methods
+- [ ] Improve typing around `.json()` parsing in TS
 - [ ] Improve error messages with `FetcherError`
 - [ ] Better `withTimeout()` fallback handling
 - [ ] Refine fallback behavior on Node (e.g., progress stubs)
@@ -46,6 +47,9 @@ Non-breaking features and enhancements.
 
 ### 📦 Fetcher Extensions
 
+- [ ] `fetcher.form()` for automatic content-type detection and encoding
+- [ ] `fetcher.on(event, handler)` for telemetry and lifecycle hooks
+- [ ] Retry backoff strategy (e.g., exponential, custom delay function)
 - [ ] `fetcher.upload()` abstraction
 - [ ] `fetcher.beacon()` support (for fire-and-forget use cases)
 - [ ] `fetcher.form()` to auto-handle `FormData`
@@ -55,8 +59,10 @@ Non-breaking features and enhancements.
 
 ## 🚀 MAJOR FEATURES (v2.x.0+)
 
-Breaking changes, architecture enhancements, and power features.
-
+- [ ] Middleware-style plugin system (`fetcher.use(plugin)`)
+- [ ] Better interceptor management (e.g., `eject`, chaining)
+- [ ] Abortable requests and global signal handling
+- [ ] Streamable large-response support (e.g., `response.body`)
 - [ ] Plugin-based architecture (e.g., `fetcher.use(loggingPlugin)`)
 - [ ] Configurable transports (e.g., Axios, Ky)
 - [ ] Built-in cookie jar/session manager for Node.js

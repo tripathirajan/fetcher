@@ -281,6 +281,7 @@ export default class Fetcher {
    * @param onProgress - Callback for download progress.
    * @param config - Optional request configuration.
    * @returns A Promise resolving to the downloaded Blob.
+   * @throws {Error} If used in a non-browser environment.
    * @platform browser
    * @note This method is only supported in browser environments.
    * @example
@@ -332,6 +333,7 @@ export default class Fetcher {
    * @param onUploadProgress - Callback for upload progress.
    * @param config - Optional request configuration.
    * @returns A Promise resolving to the Response.
+   * @throws {Error} If used in a non-browser environment.
    * @note This method is only supported in browser environments.
    * @platform browser
    * @example
