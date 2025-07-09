@@ -12,5 +12,12 @@
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true
   },
-  "exclude": ["node_modules", "dist", "coverage", "examples", "scripts"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "coverage",
+    "examples",
+    "scripts",
+    "assets"
+  ]
 }
