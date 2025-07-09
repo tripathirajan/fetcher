@@ -10,6 +10,14 @@
 
 A modern, universal HTTP client library for TypeScript and JavaScript that supports fetch and XHR fallback, timeouts, retries, interceptors, and progress reporting.
 
+## 📊 Feature Support
+
+| Feature                    | Browser | Node.js |
+| -------------------------- | :-----: | :-----: |
+| `fetcher.get/post/...`     |   ✅    |   ✅    |
+| `downloadWithProgress()`   |   ✅    |   ❌    |
+| `postWithUploadProgress()` |   ✅    |   ❌    |
+
 ## ✨ Quickstart
 
 ```typescript
@@ -51,9 +59,12 @@ const fetcher = require('@tripathirajan/fetcher').default;
 ### IIFE (Browser)
 
 ```html
-<script src="https://unpkg.com/@tripathirajan/fetcher/dist/fetcher.min.js"></script>
+<script src="https://unpkg.com/@tripathirajan/fetcher@<VERSION>/dist/fetcher.min.js"></script>
 <script>
-  // example usage here...
+  fetcher
+    .get('https://api.example.com/data')
+    .then((res) => res.json())
+    .then((data) => console.log(data));
 </script>
 ```
 
@@ -81,8 +92,8 @@ All methods return a native `Response` object. You must call `.json()`, `.text()
 - `post(url, body, config?)`
 - `put(url, body, config?)`
 - `delete(url, config?)`
-- `downloadWithProgress(url, onProgress, config?)`
-- `postWithUploadProgress(url, body, onUploadProgress, config?)`
+- `downloadWithProgress(url, onProgress, config?)` _(Browser only)_
+- `postWithUploadProgress(url, body, onUploadProgress, config?)` _(Browser only)_
 
 ## 📚 Documentation
 
@@ -92,6 +103,8 @@ Full API documentation:
 
 ## 🌐 Supported Environments
 
+> ⚠️ `downloadWithProgress` and `postWithUploadProgress` are only available in browser environments and will throw an error if used in Node.js.
+
 - Node.js 16+
 - All modern browsers
 - Internet Explorer 11 (with polyfills for Fetch/XHR)
@@ -99,6 +112,17 @@ Full API documentation:
 ## 📂 Examples
 
 See the [`examples`](./examples) folder for Node.js and Browser usage.
+
+## 🛠️ Development
+
+Run all pre-checks before build:
+
+```bash
+npm run prebuild
+```
+
+> Note: The `prebuild` script runs automatically before `npm run build`.
+> It ensures linting, formatting, and tests are successful before generating build output.
 
 ## 🤝 Contributing
 
@@ -110,4 +134,4 @@ If you find this library useful, consider starring the repo or [buying me a coff
 
 ## 🧩 License
 
-MIT © 2024 Rajan Tripathi
+MIT © 2025 Rajan Tripathi
