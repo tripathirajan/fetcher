@@ -44,6 +44,7 @@ fetcher.interceptors = defaultInstance.interceptors;
  * Create a new Fetcher instance with the given configuration.
  * @param config The configuration options for the Fetcher instance.
  * @returns A new Fetcher instance.
+ * @author @tripathirajan
  * @example
  * const client = fetcher.create({ baseURL: 'https://api.example.com' });
  * client.get('/endpoint')
