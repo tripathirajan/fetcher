@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/tripathirajan/fetcher/main/assets/logo.png" width="120" alt="Fetcher logo" />
+  <img src="https://raw.githubusercontent.com/tripathirajan/fetcher/main/assets/logo.PNG" width="120" alt="Fetcher logo" />
 </p>
 
 # @tripathirajan/fetcher
