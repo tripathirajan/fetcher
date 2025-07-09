@@ -281,6 +281,8 @@ export default class Fetcher {
    * @param onProgress - Callback for download progress.
    * @param config - Optional request configuration.
    * @returns A Promise resolving to the downloaded Blob.
+   * @platform browser
+   * @note This method is only supported in browser environments.
    * @example
    * fetcher.downloadWithProgress('/file.zip', (loaded, total) => {
    *   const percentComplete = total ? (loaded / total) * 100 : 0;
@@ -302,10 +304,14 @@ export default class Fetcher {
     onProgress: (loaded: number, total: number | null) => void,
     config: RequestConfig = {},
   ): Promise<Blob> {
-    const fullUrl = this.baseURL + url;
+    if (typeof window === 'undefined') {
+      throw new Error(
+        'fetcher.downloadWithProgress is only supported in browser environments.',
+      );
+    }
 
     const response = await fetchTransport({
-      url: fullUrl,
+      url: this.baseURL + url,
       config: {
         ...config,
         method: 'GET',
@@ -326,6 +332,8 @@ export default class Fetcher {
    * @param onUploadProgress - Callback for upload progress.
    * @param config - Optional request configuration.
    * @returns A Promise resolving to the Response.
+   * @note This method is only supported in browser environments.
+   * @platform browser
    * @example
    * fetcher.postWithUploadProgress('/upload', formData, (event) => {
    *   const percentComplete = (event.loaded / event.total) * 100;
@@ -341,6 +349,12 @@ export default class Fetcher {
     onUploadProgress: (event: ProgressEvent) => void,
     config: RequestConfig = {},
   ): Promise<Response> {
+    if (typeof window === 'undefined') {
+      throw new Error(
+        'fetcher.postWithUploadProgress is only supported in browser environments.',
+      );
+    }
+
     const fullUrl = this.baseURL + url;
 
     return xhrTransport({
